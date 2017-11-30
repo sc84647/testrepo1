@@ -11,7 +11,7 @@ services:
 
 addons:
           hosts:
-                      - sc84647.dev 
+                      - fixometer.dev 
                             
 before_install:
         - mysql -u root -e 'create database fixometer_dev;'
@@ -45,8 +45,7 @@ before_script:
         - sudo ln -s fixometer /var/www/fixometer.dev
         - sudo a2ensite fixometer.dev
         - sudo a2enmod rewrite        
-        - cat /etc/hosts
-        - sudo echo "127.0.0.1       fixometer.dev" >> /etc/hosts
+        - cat /etc/hosts        # debug
         - sudo service apache2 restart
         - curl "http://localhost"
         - curl "http://www.fixometer.dev"
