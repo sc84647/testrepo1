@@ -22,7 +22,8 @@ before_install:
 before_script:
         - pwd   # debug 
         - git clone https://github.com/therestartproject/fixometer
-        - sudo ln -s fixometer /var/www/fixometer.dev
+        - (ls /var/www) &   # debug
+          #- sudo ln -s fixometer /var/www/fixometer.dev
         - ls -al # debug
         - cat `ls -1 fixometer/data/migrations/*.sql | sort -n` | mysql -u root fixometer_dev
         # Setup Apache
