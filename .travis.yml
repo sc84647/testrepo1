@@ -43,8 +43,10 @@ before_script:
         # Setup Fixometer
         - (ls /var/www) &   # debug
         - sudo ln -s fixometer /var/www/fixometer.dev
+        - (ls /var/www) &   # debug
         - sudo a2ensite fixometer.dev
         - sudo a2enmod rewrite        
+        - sudo service apache2 reload
         - cat /etc/hosts        # debug
         - sudo service apache2 restart
         - curl "http://localhost"
