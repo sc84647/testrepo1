@@ -46,7 +46,7 @@ before_script:
         - sudo a2ensite fixometer.dev
         - sudo a2enmod rewrite        
         - cat /etc/hosts
-        - echo "127.0.0.1       fixometer.dev" >> /etc/hosts
+        - sudo echo "127.0.0.1       fixometer.dev" >> /etc/hosts
         - sudo service apache2 restart
         - curl "http://localhost"
         - curl "http://www.fixometer.dev"
@@ -54,7 +54,8 @@ before_script:
 script:
         - php vendor/codeception/codeception/codecept run acceptance
 
-after_script:
+after_failure:
         # debug
         - ls -al /etc/apache2/sites-available
         - cat /etc/apache2/sites-available/fixometer.dev.conf 
+        - cat /etc/hosts
