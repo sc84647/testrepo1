@@ -38,12 +38,15 @@ before_script:
         - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
         # configure apache virtual hosts
         - sudo cp -f build/travis-ci-apache /etc/apache2/sites-available/fixometer.dev.conf
+        - cat /etc/apache2/sites-available/fixometer.dev.conf # debug
+        - pwd # debug
+        - cd fixometer
         - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/fixometer.dev.conf
         - cat /etc/apache2/sites-available/fixometer.dev.conf # debug
         # Setup Fixometer
-        - (ls /var/www) &   # debug
-        - sudo ln -s fixometer /var/www/fixometer.dev
-        - (ls /var/www) &   # debug
+        #- (ls -al /var/www) &   # debug
+          #- sudo ln -s fixometer /var/www/fixometer.dev
+          #- (ls -al /var/www) &   # debug
         - sudo a2ensite fixometer.dev
         - sudo a2enmod rewrite        
         - sudo service apache2 reload
@@ -52,6 +55,7 @@ before_script:
         - curl "http://localhost"
         - curl "http://www.fixometer.dev"
         - curl "http://127.0.0.1"
+        - curl "http://127.0.1.1"
 script:
         - php vendor/codeception/codeception/codecept run acceptance
 
