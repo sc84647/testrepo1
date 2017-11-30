@@ -14,11 +14,11 @@ addons:
                       - sc84647.dev 
                             
 before_install:
-
+        - mysql -u root -e 'create database fixometer_dev;'
+        - mysql -u root -e 'select @@sql_mode;'
 
 before_script:
-        - echo "Test" | sendmail -s "Test" stephen.cook@zoho.com
-
+        - git clone https://github.com/therestartproject/fixometer
 
 script:
           - php vendor/codeception/codeception/codecept run acceptance
