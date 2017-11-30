@@ -20,15 +20,12 @@ before_install:
         - mysql -u root -e 'grant all privileges on fixometer_dev.* to ''fixometer_root''@''localhost'';'
 
 before_script:
-        - pwd   # debug 
         - git clone https://github.com/therestartproject/fixometer
-        - ls -al # debug
         - cat `ls -1 fixometer/data/migrations/*.sql | sort -n` | mysql -u root fixometer_dev
         # Setup Apache
         - sudo apt-get update
         - sudo apt-get install apache2 libapache2-mod-fastcgi
-        - ls -al /etc/apache2/sites-available/ # debug
-  # enable php-fpm
+        # enable php-fpm
         - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
         - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf
         - sudo a2enmod rewrite actions fastcgi alias
@@ -36,17 +33,10 @@ before_script:
         - sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
         - sudo chown -R travis:travis /var/lib/apache2/fastcgi
         - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
-        # configure apache virtual hosts
+        # configure fixometer
         - sudo cp -f build/travis-ci-apache /etc/apache2/sites-available/fixometer.dev.conf
-        - cat /etc/apache2/sites-available/fixometer.dev.conf # debug
-        - pwd # debug
         - cd fixometer
         - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/fixometer.dev.conf
-        - cat /etc/apache2/sites-available/fixometer.dev.conf # debug
-        # Setup Fixometer
-        #- (ls -al /var/www) &   # debug
-          #- sudo ln -s fixometer /var/www/fixometer.dev
-          #- (ls -al /var/www) &   # debug
         - cp config/config.example.php config/config.php
         - cp config/database.example.php config/database.php
         - sed -e "s?username?fixometer_root?g" --in-place config/database.php
@@ -56,14 +46,12 @@ before_script:
         - sudo a2ensite fixometer.dev
         - sudo a2enmod rewrite        
         - sudo service apache2 reload
-        - cat /etc/hosts        # debug
         - sudo service apache2 restart
-        - curl "http://localhost"
+        # Debug: inspect site
         - curl "http://www.fixometer.dev"
-        - curl "http://127.0.0.1"
-        - curl "http://127.0.1.1"
+        #- curl "http://127.0.0.1"
 script:
-        - php vendor/codeception/codeception/codecept run acceptance
+        #- php vendor/codeception/codeception/codecept run acceptance
 
 after_failure:
         # debug
