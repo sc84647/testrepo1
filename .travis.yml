@@ -16,9 +16,14 @@ addons:
 before_install:
         - mysql -u root -e 'create database fixometer_dev;'
         - mysql -u root -e 'select @@sql_mode;'
+        - mysql -u root -e 'create user ''fixometer_root''@''localhost'';'
+        - mysql -u root -e 'grant all privileges on fixometer_dev.* to ''fixometer_root''@''localhost'';'
 
 before_script:
         - git clone https://github.com/therestartproject/fixometer
+        - ls -al
+        - ls -al /etc/apache2/sites-available/
+        - cat `ls -1 data/migrations/*.sql | sort -n` | mysql -u root -p fixometer_dev
 
 script:
           - php vendor/codeception/codeception/codecept run acceptance
