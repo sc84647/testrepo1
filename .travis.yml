@@ -23,7 +23,7 @@ before_script:
         - git clone https://github.com/therestartproject/fixometer
         - ls -al
         - cd fixometer
-        - cat `ls -1 data/migrations/*.sql | sort -n` | mysql -u root -p fixometer_dev
+        - cat `ls -1 data/migrations/*.sql | sort -n` | mysql -u root fixometer_dev
         # Setup Apache
         - sudo apt-get update
         - sudo apt-get install apache2 libapache2-mod-fastcgi
