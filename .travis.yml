@@ -20,8 +20,10 @@ before_install:
         - mysql -u root -e 'grant all privileges on fixometer_dev.* to ''fixometer_root''@''localhost'';'
 
 before_script:
+        - pwd   # debug 
         - git clone https://github.com/therestartproject/fixometer
-        - ls -al
+        - sudo ln -s fixometer /var/www/fixometer.dev
+        - ls -al # debug
         - cat `ls -1 fixometer/data/migrations/*.sql | sort -n` | mysql -u root fixometer_dev
         # Setup Apache
         - sudo apt-get update
@@ -38,7 +40,15 @@ before_script:
         # configure apache virtual hosts
         - sudo cp -f build/travis-ci-apache /etc/apache2/sites-available/000-default.conf
         - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/000-default.conf
+        # Setup Fixometer
+        - sudo ln -s fixometer /var/www/fixometer.dev
+        - sudo a2ensite fixometer.dev
+        - sudo a2enmod rewrite        
+        - cat /etc/hosts
+        - echo "127.0.0.1       fixometer.dev" >> /etc/hosts
         - sudo service apache2 restart
         - curl "http://localhost"
+        - curl "http://www.fixometer.dev"
+        - curl "http://127.0.0.1"
 script:
           - php vendor/codeception/codeception/codecept run acceptance
