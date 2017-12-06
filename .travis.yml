@@ -20,6 +20,7 @@ before_install:
         - mysql -u root -e 'grant all privileges on fixometer_dev.* to ''fixometer_root''@''localhost'';'
 
 install:
+        - composer self-update
         - composer install --no-interaction
 
 before_script:
